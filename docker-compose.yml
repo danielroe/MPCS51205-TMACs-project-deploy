@@ -37,12 +37,13 @@ services:
     image: auctions-service:latest
     container_name: auctions-service
     hostname: auctions-service
-    entrypoint: ./main sql                 # execute the compiled main program (golang)
+    # entrypoint: ./main sql                 # execute the compiled main program (golang)
+    entrypoint: /bin/bash
     tty: true
     stdin_open: true
     restart: on-failure                 # restarts container when it goes down
     volumes:
-      - ${AUCTIONS_SERVICE_DIR_PATH}/auctions-service:/go/src/auctions-service-debug # for debugging, mount src folder as separate folder
+      - ${CLOSED_AUCTION_METRICS_SERVICE_DIR_PATH}/closed-auction-metrics-service/src/db:/go/src/auctions-service-debug # for debugging, mount src folder as separate folder
     networks:
       - my-application-network
     ports:
@@ -56,6 +57,9 @@ services:
     hostname: mongo-server
     environment:                        # sets environment variables
       - MONGODB_PASS=password
+    # volumes:
+      # - ${CLOSED_AUCTION_METRICS_SERVICE_DIR_PATH}/closed-auction-metrics/src/db/init:/docker-entrypoint-initdb.d # runs if !exist data volume
+      # - mongodata:/data/db # allows persistence; see https://betterprogramming.pub/persistent-databases-using-dockers-volumes-and-mongodb-9ac284c25b39
     networks:
       - my-application-network
     ports:
@@ -66,7 +70,8 @@ services:
     image: closed-auction-metrics:latest
     container_name: closed-auction-metrics-service
     hostname: closed-auction-metrics-service
-    entrypoint: python3 api_main.py         # execute the compiled main program (golang)
+    # entrypoint: python3 api_main.py         # execute the compiled main program (golang)
+    entrypoint: /bin/bash
     tty: true
     stdin_open: true
     restart: on-failure                 # restarts container when it goes down
@@ -86,4 +91,5 @@ networks:
     driver: bridge
 
 volumes:
-  pgdata: # clear persisted data with 'docker volume rm 51205-project_pgdata'
+  pgdata: # clear persisted data with 'docker volume rm project-deploy_pgdata'
+  mongodata: # clear persisted data with 'docker volume rm project-deploy_mongodata'

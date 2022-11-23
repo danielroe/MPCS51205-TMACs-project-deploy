@@ -2,6 +2,10 @@
 # clone repo if it does not exist and checkout specific commit;
 # else, if the repo exists, pull specific commit
 
+# stop script upon encountering the first error
+# without closing terminal window
+set -e
+
 PATH_TO_DIR_HOLDING_THIS_SCRIPT==$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
 # silence the outputs of pushd, popd ocmmands
@@ -39,7 +43,8 @@ else
     git clone $GITHUB_REPO_URL $PROJECT_DIR_PATH/$REPO_NAME --quiet # put in directory above
     pushd  $PROJECT_DIR_PATH/$REPO_NAME # go into repo
 fi
-git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet # checkout the commit stable with project
+# git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet # checkout the commit stable with project
+git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
 popd # go back to original location
 
 ###################
@@ -61,5 +66,6 @@ else
     git clone $GITHUB_REPO_URL $PROJECT_DIR_PATH/$REPO_NAME --quiet
     pushd  $PROJECT_DIR_PATH/$REPO_NAME
 fi
-git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet
+# git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet
+git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
 popd

@@ -17,7 +17,7 @@ else
 fi
 
 # (2) run clone-or-pull-repos.sh
-. $PATH_TO_DIR_HOLDING_THIS_SCRIPT/clone-or-pull-repos.sh
+# . $PATH_TO_DIR_HOLDING_THIS_SCRIPT/clone-or-pull-repos.sh
 
 # (3) build the necessary images
 
