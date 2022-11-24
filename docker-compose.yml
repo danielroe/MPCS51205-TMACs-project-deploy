@@ -57,9 +57,9 @@ services:
     hostname: mongo-server
     environment:                        # sets environment variables
       - MONGODB_PASS=password
-    # volumes:
+    volumes:
       # - ${CLOSED_AUCTION_METRICS_SERVICE_DIR_PATH}/closed-auction-metrics/src/db/init:/docker-entrypoint-initdb.d # runs if !exist data volume
-      # - mongodata:/data/db # allows persistence; see https://betterprogramming.pub/persistent-databases-using-dockers-volumes-and-mongodb-9ac284c25b39
+      - mongodata:/data/db # allows persistence; see https://betterprogramming.pub/persistent-databases-using-dockers-volumes-and-mongodb-9ac284c25b39
     networks:
       - my-application-network
     ports:
