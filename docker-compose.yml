@@ -43,7 +43,7 @@ services:
     stdin_open: true
     restart: on-failure                 # restarts container when it goes down
     volumes:
-      - ${CLOSED_AUCTION_METRICS_SERVICE_DIR_PATH}/closed-auction-metrics-service/src/db:/go/src/auctions-service-debug # for debugging, mount src folder as separate folder
+      - ${AUCTIONS_SERVICE_DIR_PATH}/auctions-service:/go/src/auctions-service-debug # for debugging, mount src folder as separate folder
     networks:
       - my-application-network
     ports:
