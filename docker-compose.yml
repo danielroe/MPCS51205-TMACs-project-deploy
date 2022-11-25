@@ -16,10 +16,10 @@ services:
         interval: 30s
         timeout: 10s
         retries: 5
-  postgres-server:
-    image: postgres-server:latest
-    container_name: postgres-server
-    hostname: postgres-server
+  auctions-postgres-server:
+    image: auctions-postgres-server:latest
+    container_name: auctions-postgres-server
+    hostname: auctions-postgres-server
     environment:                        # sets environment variables
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=mysecret
@@ -50,11 +50,11 @@ services:
       - "10000:10000"
     depends_on:
       - rabbitmq-server
-      - postgres-server
-  mongo-server:
-    image: mongo-server:latest
-    container_name: mongo-server
-    hostname: mongo-server
+      - auctions-postgres-server
+  cam-mongo-server:
+    image: cam-mongo-server:latest
+    container_name: cam-mongo-server
+    hostname: cam-mongo-server
     environment:                        # sets environment variables
       - MONGODB_PASS=password
     volumes:
@@ -66,17 +66,17 @@ services:
       - "28017:28017"
       - "27017:27017"
     restart: always
-  closed-auction-metrics-service:
-    image: closed-auction-metrics:latest
-    container_name: closed-auction-metrics-service
-    hostname: closed-auction-metrics-service
+  cam-service:
+    image: cam-service:latest
+    container_name: cam-service
+    hostname: cam-service
     # entrypoint: python3 api_main.py         # execute the compiled main program (golang)
     entrypoint: /bin/bash
     tty: true
     stdin_open: true
     restart: on-failure                 # restarts container when it goes down
     volumes:
-      - ${CLOSED_AUCTION_METRICS_SERVICE_DIR_PATH}/closed-auction-metrics:/closed-auction-metrics-debug # for debugging, mount src folder as separate folder
+      - ${CAM_SERVICE_DIR_PATH}/closed-auction-metrics:/closed-auction-metrics-debug # for debugging, mount src folder as separate folder
     networks:
       - my-application-network
     ports:
@@ -84,7 +84,7 @@ services:
                                         # other containers can ping this container [e.g. REST/HTTP API] with notations HOST:PORT=closed-auctions-service:51224
     depends_on:
       - rabbitmq-server
-      - mongo-server
+      - cam-mongo-server
 
 networks:
   my-application-network:

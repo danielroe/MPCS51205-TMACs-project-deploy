@@ -27,10 +27,10 @@ fi
 ###################
 # AUCTIONS-SERVICE
 # params
-export AUCTIONS_SERVICE_DIR_NAME=$AUCTIONS_SERVICE_DIR_NAME
-REPO_NAME=$AUCTIONS_SERVICE_DIR_NAME # e.g. "auctions-service"
+# export AUCTIONS_SERVICE_DIR_NAME=$AUCTIONS_SERVICE_DIR_NAME
+# REPO_NAME=$AUCTIONS_SERVICE_DIR_NAME # e.g. "auctions-service"?
 GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/auctions-service.git"
-STABLE_COMMIT="41231b3"
+# STABLE_COMMIT="41231b3"
 # if repo has already been cloned, do a git pull; else, do a git clone
 echo "cloning / pulling repository: $REPO_NAME"
 if [ -d "$PROJECT_DIR_PATH/$REPO_NAME" ] 
@@ -44,16 +44,16 @@ else
     pushd  $PROJECT_DIR_PATH/$REPO_NAME # go into repo
 fi
 # git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet # checkout the commit stable with project
-git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
+# git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
 popd # go back to original location
 
 ###################
 # CLOSED-AUCTION-METRICS
 # params
-export CLOSED_AUCTION_METRICS_SERVICE_DIR_NAME=$CLOSED_AUCTION_METRICS_SERVICE_DIR_NAME
-REPO_NAME=$CLOSED_AUCTION_METRICS_SERVICE_DIR_NAME # e.g. "closed-auction-metrics"
+# export CLOSED_AUCTION_METRICS_SERVICE_DIR_NAME=$CLOSED_AUCTION_METRICS_SERVICE_DIR_NAME
+# REPO_NAME=$CLOSED_AUCTION_METRICS_SERVICE_DIR_NAME # e.g. "closed-auction-metrics"
 GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/closed-auction-metrics.git"
-STABLE_COMMIT="8abb8e3"
+# STABLE_COMMIT="8abb8e3"
 # do clone / pull
 echo "cloning / pulling repository: $REPO_NAME"
 if [ -d "$PROJECT_DIR_PATH/" ] 
@@ -67,5 +67,5 @@ else
     pushd  $PROJECT_DIR_PATH/$REPO_NAME
 fi
 # git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet
-git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
+# git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
 popd
