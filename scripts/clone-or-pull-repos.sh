@@ -4,7 +4,7 @@
 
 # stop script upon encountering the first error
 # without closing terminal window
-set -e
+# set -e
 
 PATH_TO_DIR_HOLDING_THIS_SCRIPT==$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
@@ -26,46 +26,102 @@ fi
 
 ###################
 # AUCTIONS-SERVICE
-# params
-# export AUCTIONS_SERVICE_DIR_NAME=$AUCTIONS_SERVICE_DIR_NAME
-# REPO_NAME=$AUCTIONS_SERVICE_DIR_NAME # e.g. "auctions-service"?
-GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/auctions-service.git"
-# STABLE_COMMIT="41231b3"
+# params: define vars in set-env-vars.sh
+# STABLE_COMMIT=""
 # if repo has already been cloned, do a git pull; else, do a git clone
-echo "cloning / pulling repository: $REPO_NAME"
-if [ -d "$PROJECT_DIR_PATH/$REPO_NAME" ] 
+echo "cloning / pulling repository: $AUCTIONS_SERVICE_DIR_NAME"
+if [ -d "$PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME" ] 
 then
     echo "repo already exists in directory above; doing git pull" 
-    pushd $PROJECT_DIR_PATH/$REPO_NAME # go into repo; fancy version of cd command
+    pushd $PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME # go into repo; fancy version of cd command
     git pull # pull any changes
 else
     echo "repo does not exist in directory above; doing git clone" 
-    git clone $GITHUB_REPO_URL $PROJECT_DIR_PATH/$REPO_NAME --quiet # put in directory above
-    pushd  $PROJECT_DIR_PATH/$REPO_NAME # go into repo
+    mkdir -p $PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME
+    git clone $GITHUB_REPO_URL $PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME --quiet # put in directory above
+    pushd  $PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME # go into repo
 fi
 # git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet # checkout the commit stable with project
 # git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
 popd # go back to original location
 
-###################
-# CLOSED-AUCTION-METRICS
-# params
-# export CLOSED_AUCTION_METRICS_SERVICE_DIR_NAME=$CLOSED_AUCTION_METRICS_SERVICE_DIR_NAME
-# REPO_NAME=$CLOSED_AUCTION_METRICS_SERVICE_DIR_NAME # e.g. "closed-auction-metrics"
-GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/closed-auction-metrics.git"
-# STABLE_COMMIT="8abb8e3"
-# do clone / pull
-echo "cloning / pulling repository: $REPO_NAME"
-if [ -d "$PROJECT_DIR_PATH/" ] 
-then
-    echo "repo already exists in directory above; doing git pull" 
-    pushd $PROJECT_DIR_PATH/$REPO_NAME
-    git pull
-else
-    echo "repo does not exist in directory above; doing git clone" 
-    git clone $GITHUB_REPO_URL $PROJECT_DIR_PATH/$REPO_NAME --quiet
-    pushd  $PROJECT_DIR_PATH/$REPO_NAME
-fi
-# git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet
-# git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
-popd
+# ###################
+# # CLOSED-AUCTION-METRICS
+# # params: define vars in set-env-vars.sh
+# # do clone / pull
+# echo "cloning / pulling repository: $CAM_SERVICE_DIR_NAME"
+# if [ -d "$PROJECT_DIR_PATH/" ] 
+# then
+#     echo "repo already exists in directory above; doing git pull" 
+#     pushd $PROJECT_DIR_PATH/$CAM_SERVICE_DIR_NAME
+#     git pull
+# else
+#     echo "repo does not exist in directory above; doing git clone" 
+#     git clone $GITHUB_REPO_URL $PROJECT_DIR_PATH/$CAM_SERVICE_DIR_NAME --quiet
+#     pushd  $PROJECT_DIR_PATH/$CAM_SERVICE_DIR_NAME
+# fi
+# # git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet
+# # git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
+# popd
+
+# ###################
+# # USER-SERVICE
+# # params: define vars in set-env-vars.sh
+# GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/user-service.git"
+# # STABLE_COMMIT=""
+# # do clone / pull
+# echo "cloning / pulling repository: $USER_SERVICE_DIR_NAME"
+# if [ -d "$PROJECT_DIR_PATH/" ] 
+# then
+#     echo "repo already exists in directory above; doing git pull" 
+#     pushd $PROJECT_DIR_PATH/$USER_SERVICE_DIR_NAME
+#     git pull
+# else
+#     echo "repo does not exist in directory above; doing git clone" 
+#     git clone $GITHUB_REPO_URL $PROJECT_DIR_PATH/$USER_SERVICE_DIR_NAME --quiet
+#     pushd  $PROJECT_DIR_PATH/$USER_SERVICE_DIR_NAME
+# fi
+# # git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet
+# # git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
+# popd
+
+# ###################
+# # WATCHLIST-SERVICE
+# # params: define vars in set-env-vars.sh
+# # STABLE_COMMIT=""
+# # do clone / pull
+# echo "cloning / pulling repository: $WATCHLIST_DIR_NAME"
+# if [ -d "$PROJECT_DIR_PATH/" ] 
+# then
+#     echo "repo already exists in directory above; doing git pull" 
+#     pushd $PROJECT_DIR_PATH/$WATCHLIST_DIR_NAME
+#     git pull
+# else
+#     echo "repo does not exist in directory above; doing git clone" 
+#     git clone $GITHUB_REPO_URL $PROJECT_DIR_PATH/$WATCHLIST_DIR_NAME --quiet
+#     pushd  $PROJECT_DIR_PATH/$WATCHLIST_DIR_NAME
+# fi
+# # git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet
+# # git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
+# popd
+
+
+# ###################
+# # GATEWAY
+# # params: define vars in set-env-vars.sh
+# # STABLE_COMMIT=""
+# # do clone / pull
+# echo "cloning / pulling repository: $GATEWAY_DIR_NAME"
+# if [ -d "$PROJECT_DIR_PATH/" ] 
+# then
+#     echo "repo already exists in directory above; doing git pull" 
+#     pushd $PROJECT_DIR_PATH/$GATEWAY_DIR_NAME
+#     git pull
+# else
+#     echo "repo does not exist in directory above; doing git clone" 
+#     git clone $GITHUB_REPO_URL $PROJECT_DIR_PATH/$GATEWAY_DIR_NAME --quiet
+#     pushd  $PROJECT_DIR_PATH/$GATEWAY_DIR_NAME
+# fi
+# # git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet
+# # git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
+# popd

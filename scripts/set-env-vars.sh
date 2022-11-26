@@ -16,15 +16,17 @@ echo PROJECT_DIR_NAME=$result
 echo
 
 # AUCTIONS-SERVICE: define and export env vars
+export AUCTIONS_GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/auctions-service.git"
 export AUCTIONS_SERVICE_DIR_NAME="auctions-service" # name of repo dir
-export AUCTIONS_SERVICE_DIR_PATH=$PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME # path to repo
+export AUCTIONS_SERVICE_DIR_PATH=$PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME # path to repo project dir
 export AUCTIONS_IMG_DOCKERFILE="$PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME/auctions-service/" # path to dir holding dockerfile (file named "Dockerfile")
 export AUCTIONS_IMG_NAME="auctions-service" # name for resultant image after building image
-export AUCTIONS_POSTGRES_IMG_DOCKERFILE="$PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME/postgres/" # path to dir holding dockerfile for postgres
+export AUCTIONS_POSTGRES_IMG_DOCKERFILE="$PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME/postgres/" # path to dir holding dockerfile for postgres for this service
 export AUCTIONS_POSTGRES_IMG_NAME="auctions-postgres-server" # name for resultant image after building image
 
 echo $AUCTIONS_SERVICE_DIR_NAME
 echo 
+echo AUCTIONS_GITHUB_REPO_URL=$AUCTIONS_GITHUB_REPO_URL
 echo AUCTIONS_SERVICE_DIR_NAME=$AUCTIONS_SERVICE_DIR_NAME
 echo AUCTIONS_SERVICE_DIR_PATH=$PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME
 echo AUCTIONS_IMG_DOCKERFILE=$AUCTIONS_IMG_DOCKERFILE
@@ -44,6 +46,7 @@ echo "(shared) RABBITMQ_IMG_NAME=$RABBITMQ_IMG_NAME"
 echo
 
 # CLOSED-AUCTIONS-SERVICE: define and export env vars
+export CAM_GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/closed-auction-metrics.git"
 export CAM_SERVICE_DIR_NAME="closed-auction-metrics"
 export CAM_SERVICE_DIR_PATH=$PROJECT_DIR_PATH/$CAM_SERVICE_DIR_NAME
 export CAM_IMG_DOCKERFILE="$PROJECT_DIR_PATH/$CAM_SERVICE_DIR_NAME/closed-auction-metrics/"
@@ -53,6 +56,7 @@ export CAM_MONGO_IMG_NAME="cam-mongo-server"
 
 echo $CAM_SERVICE_DIR_NAME
 echo 
+echo CAM_GITHUB_REPO_URL=$CAM_GITHUB_REPO_URL
 echo CAM_SERVICE_DIR_NAME=$CAM_SERVICE_DIR_NAME
 echo CAM_SERVICE_DIR_PATH=$PROJECT_DIR_PATH/$CAM_SERVICE_DIR_NAME
 echo CAM_IMG_DOCKERFILE=$CAM_IMG_DOCKERFILE
@@ -62,28 +66,41 @@ echo CAM_MONGO_IMG_NAME=$CAM_MONGO_IMG_NAME
 echo
 
 # USER-SERVICE
+export USER_SERVICE_GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/watchlist-service.git"
+export USER_SERVICE_DIR_NAME="user-service"
 export USER_SERVICE_IMG_NAME=maven/builder:user-service
-export USER_SERVICE_IMG_DOCKERFILE="$PROJECT_DIR_PATH/user-service/"
+export USER_SERVICE_IMG_DOCKERFILE="$PROJECT_DIR_PATH/$USER_SERVICE_DIR_NAME/"
 echo user-service
 echo 
+echo USER_SERVICE_GITHUB_REPO_URL=$USER_SERVICE_GITHUB_REPO_URL
+echo USER_SERVICE_DIR_NAME=$USER_SERVICE_DIR_NAME
 echo USER_SERVICE_IMG_NAME=$USER_SERVICE_IMG_NAME
 echo USER_SERVICE_IMG_DOCKERFILE=$USER_SERVICE_IMG_DOCKERFILE
 echo
 
 # WATCHLIST-SERVICE
+export WATCHLIST_GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/watchlist-service.git"
+export WATCHLIST_DIR_NAME="watchlist-service"
 export WATCHLIST_IMG_NAME=maven/builder:watchlist-service
 export WATCHLIST_IMG_DOCKERFILE="$PROJECT_DIR_PATH/watchlist-service/"
+
 echo watchlist
 echo 
+echo WATCHLIST_GITHUB_REPO_URL=$WATCHLIST_GITHUB_REPO_URL
+echo WATCHLIST_DIR_NAME=$WATCHLIST_DIR_NAME
 echo WATCHLIST_IMG_NAME=$WATCHLIST_IMG_NAME
 echo WATCHLIST_IMG_DOCKERFILE=$WATCHLIST_IMG_DOCKERFILE
 echo
 
 # GATEWAY-SERVICE
-export GATEWAY_IMG_NAME=maven/builder:gateway
+export GATEWAY_GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/gateway.git"
+export GATEWAY_DIR_NAME="gateway"
+export GATEWAY_IMG_NAME="maven/builder:gateway"
 export GATEWAY_IMG_DOCKERFILE="$PROJECT_DIR_PATH/gateway/"
 echo gateway
 echo 
+echo GATEWAY_GITHUB_REPO_URL=$GATEWAY_GITHUB_REPO_URL
+echo GATEWAY_DIR_NAME=$GATEWAY_DIR_NAME
 echo GATEWAY_IMG_NAME=$GATEWAY_IMG_NAME
 echo GATEWAY_IMG_DOCKERFILE=$GATEWAY_IMG_DOCKERFILE
 echo
