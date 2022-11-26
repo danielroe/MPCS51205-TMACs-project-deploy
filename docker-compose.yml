@@ -16,6 +16,7 @@ services:
         interval: 30s
         timeout: 10s
         retries: 5
+  # #### AUCTIONS-SERVICE
   auctions-postgres-server:
     image: auctions-postgres-server:latest
     container_name: auctions-postgres-server
@@ -37,8 +38,8 @@ services:
     image: auctions-service:latest
     container_name: auctions-service
     hostname: auctions-service
-    # entrypoint: ./main sql                 # execute the compiled main program (golang)
-    entrypoint: /bin/bash
+    entrypoint: ./main sql                 # execute the compiled main program (golang)
+    # entrypoint: /bin/bash
     tty: true
     stdin_open: true
     restart: on-failure                 # restarts container when it goes down
@@ -51,6 +52,7 @@ services:
     depends_on:
       - rabbitmq-server
       - auctions-postgres-server
+  # #### CAM SERVICE
   cam-mongo-server:
     image: cam-mongo-server:latest
     container_name: cam-mongo-server
@@ -70,8 +72,8 @@ services:
     image: cam-service:latest
     container_name: cam-service
     hostname: cam-service
-    # entrypoint: python3 api_main.py         # execute the compiled main program (golang)
-    entrypoint: /bin/bash
+    entrypoint: python3 api_main.py         # execute main program (python)
+    # entrypoint: /bin/bash
     tty: true
     stdin_open: true
     restart: on-failure                 # restarts container when it goes down
@@ -85,6 +87,87 @@ services:
     depends_on:
       - rabbitmq-server
       - cam-mongo-server
+  # #### USER-SERVICE
+  user-service:
+    build:
+      context: https://github.com/MPCS51205-TMACs/user-service.git
+    image: maven/builder:user-service
+    container_name: user-service
+    # hostname: user [MAY NOT BE NEEDED]
+    ports:
+      - "8081:8080" # make sure unique
+    environment:
+      - POSTGRES_USER=user-service
+      - POSTGRES_PASSWORD=user-service
+      - POSTGRES_DB=user
+    volumes:
+      - "${USER_SERVICE_IMG_DOCKERFILE}/src:/build/src"
+      - "${USER_SERVICE_IMG_DOCKERFILE}/target:/build/target:cached"
+    command: "mvn spring-boot:run"
+    depends_on:
+      - postgres-user
+      - rabbitmq-server
+      # - auctions-service
+    networks:
+      - my-application-network
+  postgres-user:
+    image: postgres
+    container_name: postgres-user
+    ports:
+      - "5433:5432" # CHANGE PER SERVICE MAKE SURE HOSTPORTS UNIQUE
+    environment:
+      POSTGRES_USER: user-service
+      POSTGRES_PASSWORD: user-service
+      POSTGRES_DB: user
+    networks:
+      - my-application-network
+  #### WATCHLIST
+  postgres-watchlist:
+    image: postgres
+    container_name: postgres-watchlist
+    ports:
+      - 5434:5432 # make sure unique!
+    environment:
+      POSTGRES_USER: watchlist-service
+      POSTGRES_PASSWORD: watchlist-service
+      POSTGRES_DB: watchlist
+    networks:
+      - my-application-network
+  watchlist: # NOTE: WILL FAIL IF CERTAIN EXCHANGES / QUEUES DONT EXIST
+    build:
+      context: https://github.com/MPCS51205-TMACs/watchlist-service.git
+    image: maven/builder:watchlist-service
+    container_name: watchlist-service
+    ports:
+      - "8082:8080" # make sure unique
+    volumes:
+      - "${WATCHLIST_IMG_DOCKERFILE}/src:/build/src"
+      - "${WATCHLIST_IMG_DOCKERFILE}/target:/build/target:cached"
+    command: "mvn spring-boot:run"
+    networks:
+      - my-application-network
+    depends_on:
+      - rabbitmq-server
+      - postgres-watchlist
+  #### GATEWAY
+  gateway:
+    # build:
+    #   context: https://github.com/MPCS51205-TMACs/gateway.git
+    image: maven/builder:gateway
+    container_name: gateway
+    ports:
+      - "8080:8080" # make sure unique
+    volumes:
+      - "${GATEWAY_IMG_DOCKERFILE}/src:/build/src"
+      - "${GATEWAY_IMG_DOCKERFILE}/target:/build/target:cached"
+    command: "mvn spring-boot:run"
+    networks:
+      - my-application-network
+    depends_on:
+      - auctions-service # MAKE DEPEND ON EVERY MICROSERVICE
+      - cam-service
+      - user-service
+      - watchlist
 
 networks:
   my-application-network:
@@ -93,3 +176,16 @@ networks:
 volumes:
   pgdata: # clear persisted data with 'docker volume rm project-deploy_pgdata'
   mongodata: # clear persisted data with 'docker volume rm project-deploy_mongodata'
+
+  # MATT'S RABBIT
+    # rabbitmq: 
+    #   image: rabbitmq:3-management
+    #   container_name: rabbitmq-server
+    #   restart: always
+    #   ports:
+    #     - "15672:15672"
+    #     - "5672:5672"
+    #   networks:
+    #     - my-application-network
+
+    

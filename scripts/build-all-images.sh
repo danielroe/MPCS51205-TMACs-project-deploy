@@ -84,4 +84,18 @@ echo "building ClosedAuctionMetricsService ($CAM_IMG_NAME) image from dockerfile
 docker build -t "$CAM_IMG_NAME:latest" $CAM_IMG_DOCKERFILE
 echo
 
+
+# user-service
+echo "building user-service image ($USER_SERVICE_IMG_NAME) from dockerfile..."
+docker build -t $USER_SERVICE_IMG_NAME $USER_SERVICE_IMG_DOCKERFILE
+# docker build -t maven/builder:user-service $USER_SERVICE_IMG_DOCKERFILE
+
+# watchlist-service
+echo "building watchlist-service image ($WATCHLIST_IMG_NAME) from dockerfile..."
+docker build -t $WATCHLIST_IMG_NAME $WATCHLIST_IMG_DOCKERFILE
+
+# gateway
+echo "building gateway image ($GATEWAY_IMG_NAME) from dockerfile..."
+docker build -t $GATEWAY_IMG_NAME $GATEWAY_IMG_DOCKERFILE
+
 echo "done"
