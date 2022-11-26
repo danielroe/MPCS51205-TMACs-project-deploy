@@ -6,44 +6,51 @@
 # without closing terminal window
 # set -e
 
-PATH_TO_DIR_HOLDING_THIS_SCRIPT==$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+cd $PROJECT_DIR_PATH
+git clone $AUCTIONS_GITHUB_REPO_URL
+git clone $CAM_GITHUB_REPO_URL
+git clone $USER_SERVICE_GITHUB_REPO_URL
+git clone $WATCHLIST_GITHUB_REPO_URL
+git clone $GATEWAY_GITHUB_REPO_URL
 
-# silence the outputs of pushd, popd ocmmands
-pushd () {
-    command pushd "$@" > /dev/null
-}
-popd () {
-    command popd "$@" > /dev/null
-}
+# PATH_TO_DIR_HOLDING_THIS_SCRIPT==$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
-# RUN set-env-vars.sh IF IT APPEARS PROJECT ENV VARS HAVE NOT BEEN SET
-if [[ -z "${PROJECT_DIR_PATH}" ]]; then
-    echo "project environment vars do not appear to be set...running set-env-vars.sh"
-    . $PATH_TO_DIR_HOLDING_THIS_SCRIPT/set-env-vars.sh
-else
-    echo "project environment vars appear already set..."
-fi
+# # silence the outputs of pushd, popd ocmmands
+# pushd () {
+#     command pushd "$@" > /dev/null
+# }
+# popd () {
+#     command popd "$@" > /dev/null
+# }
 
-###################
-# AUCTIONS-SERVICE
-# params: define vars in set-env-vars.sh
-# STABLE_COMMIT=""
-# if repo has already been cloned, do a git pull; else, do a git clone
-echo "cloning / pulling repository: $AUCTIONS_SERVICE_DIR_NAME"
-if [ -d "$PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME" ] 
-then
-    echo "repo already exists in directory above; doing git pull" 
-    pushd $PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME # go into repo; fancy version of cd command
-    git pull # pull any changes
-else
-    echo "repo does not exist in directory above; doing git clone" 
-    mkdir -p $PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME
-    git clone $GITHUB_REPO_URL $PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME --quiet # put in directory above
-    pushd  $PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME # go into repo
-fi
-# git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet # checkout the commit stable with project
-# git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
-popd # go back to original location
+# # RUN set-env-vars.sh IF IT APPEARS PROJECT ENV VARS HAVE NOT BEEN SET
+# if [[ -z "${PROJECT_DIR_PATH}" ]]; then
+#     echo "project environment vars do not appear to be set...running set-env-vars.sh"
+#     . $PATH_TO_DIR_HOLDING_THIS_SCRIPT/set-env-vars.sh
+# else
+#     echo "project environment vars appear already set..."
+# fi
+
+# ###################
+# # AUCTIONS-SERVICE
+# # params: define vars in set-env-vars.sh
+# # STABLE_COMMIT=""
+# # if repo has already been cloned, do a git pull; else, do a git clone
+# echo "cloning / pulling repository: $AUCTIONS_SERVICE_DIR_NAME"
+# if [ -d "$PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME" ] 
+# then
+#     echo "repo already exists in directory above; doing git pull" 
+#     pushd $PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME # go into repo; fancy version of cd command
+#     git pull # pull any changes
+# else
+#     echo "repo does not exist in directory above; doing git clone" 
+#     mkdir -p $PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME
+#     git clone $GITHUB_REPO_URL $PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME --quiet # put in directory above
+#     pushd  $PROJECT_DIR_PATH/$AUCTIONS_SERVICE_DIR_NAME # go into repo
+# fi
+# # git checkout $STABLE_COMMIT $PROJECT_DIR_PATH/$REPO_NAME --quiet # checkout the commit stable with project
+# # git checkout main --quiet # THIS WILL CHECKOUT THE LATEST COMMIT...NEED TO BE IN GIT DIR THOUGH SO CD THERE FIRST
+# popd # go back to original location
 
 # ###################
 # # CLOSED-AUCTION-METRICS

@@ -1,3 +1,6 @@
 # make sure the names of repos are included here and not committed.
 /auctions-service
 /closed-auction-metrics
+/gateway
+/user-service
+/watchlist-service

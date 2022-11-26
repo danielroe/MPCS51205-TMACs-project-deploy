@@ -79,7 +79,7 @@ echo USER_SERVICE_IMG_DOCKERFILE=$USER_SERVICE_IMG_DOCKERFILE
 echo
 
 # WATCHLIST-SERVICE
-export WATCHLIST_GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/watchlist-service.git"
+export WATCHLIST_GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/user-service.git"
 export WATCHLIST_DIR_NAME="watchlist-service"
 export WATCHLIST_IMG_NAME=maven/builder:watchlist-service
 export WATCHLIST_IMG_DOCKERFILE="$PROJECT_DIR_PATH/watchlist-service/"
