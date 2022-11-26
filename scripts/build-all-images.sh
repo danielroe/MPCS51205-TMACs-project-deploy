@@ -94,6 +94,10 @@ docker build -t $USER_SERVICE_IMG_NAME $USER_SERVICE_IMG_DOCKERFILE
 echo "building watchlist-service image ($WATCHLIST_IMG_NAME) from dockerfile..."
 docker build -t $WATCHLIST_IMG_NAME $WATCHLIST_IMG_DOCKERFILE
 
+# user-service
+echo "building user-service image ($ITEM_IMG_NAME) from dockerfile..."
+docker build -t $ITEM_IMG_NAME $ITEM_IMG_DOCKERFILE
+
 # gateway
 echo "building gateway image ($GATEWAY_IMG_NAME) from dockerfile..."
 docker build -t $GATEWAY_IMG_NAME $GATEWAY_IMG_DOCKERFILE

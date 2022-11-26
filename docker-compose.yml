@@ -149,6 +149,36 @@ services:
     depends_on:
       - rabbitmq-server
       - postgres-watchlist
+  #### ITEM-SERVICE
+  item-service:
+    build:
+      context: .
+    image: item-service:latest
+    container_name: item-service
+    hostname: item-service
+    restart: on-failure
+    ports:
+      - "8088:8088" # make sure LHS port unique
+    volumes:
+      - "${ITEM_IMG_DOCKERFILE}/src:/build/src"
+      - "${ITEM_IMG_DOCKERFILE}/target:/build/target:cached"
+    command: "mvn spring-boot:run"
+    depends_on:
+      - postgres-item
+      - rabbitmq-server
+    networks:
+      - my-application-network
+  postgres-item:
+    image: postgres
+    container_name: postgres-item
+    ports:
+      - "5435:5432" # make sure LHS port unqiue
+    environment:
+      POSTGRES_USER: item-service
+      POSTGRES_PASSWORD: item-service
+      POSTGRES_DB: item
+    networks:
+      - my-application-network
   #### GATEWAY
   gateway:
     # build:
