@@ -133,9 +133,9 @@ echo
 
 # GATEWAY-PYTHON
 # export GATEWAY_GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/gateway.git"
-export GATEWAY_DIR_NAME="gateway-python"
-export GATEWAY_IMG_NAME="gateway-python:latest"
-export GATEWAY_IMG_DOCKERFILE="$PROJECT_DIR_PATH/gateway-python/"
+export GATEWAY_PY_DIR_NAME="gateway-python"
+export GATEWAY_PY_IMG_NAME="gateway-python:latest"
+export GATEWAY_PY_IMG_DOCKERFILE="$PROJECT_DIR_PATH/gateway-python/"
 echo gateway-python
 echo 
 

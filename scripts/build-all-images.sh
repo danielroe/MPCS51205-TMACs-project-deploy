@@ -106,8 +106,8 @@ docker build -t $NOTIFICATION_IMG_NAME $NOTIFICATION_IMG_DOCKERFILE
 echo "building gateway image ($GATEWAY_IMG_NAME) from dockerfile..."
 docker build -t $GATEWAY_IMG_NAME $GATEWAY_IMG_DOCKERFILE
 
-# gateway-python
-echo "building gateway-python image ($GATEWAY_PY_IMG_NAME) from dockerfile..."
-docker build -t $GATEWAY_PY_IMG_NAME $GATEWAY_PY_IMG_DOCKERFILE
+# # gateway-python
+# echo "building gateway-python image ($GATEWAY_PY_IMG_NAME) from dockerfile..."
+# docker build -t $GATEWAY_PY_IMG_NAME $GATEWAY_PY_IMG_DOCKERFILE
 
 echo "done"

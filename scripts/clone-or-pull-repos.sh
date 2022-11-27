@@ -12,6 +12,7 @@ git clone $CAM_GITHUB_REPO_URL
 git clone $USER_SERVICE_GITHUB_REPO_URL
 git clone $WATCHLIST_GITHUB_REPO_URL
 git clone $ITEM_GITHUB_REPO_URL
+git clone $NOTIFICATION_GITHUB_REPO_URL
 git clone $GATEWAY_GITHUB_REPO_URL
 
 # PATH_TO_DIR_HOLDING_THIS_SCRIPT==$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
