@@ -33,13 +33,14 @@ services:
     ports:
       - "3306:3306"                     # for managment
       - "5432:5432"                     # for message traffic
-    restart: always
+    # restart: always
   auctions-service:
     image: auctions-service:latest
     container_name: auctions-service
     hostname: auctions-service
-    entrypoint: ./main sql                 # execute the compiled main program (golang)
-    # entrypoint: /bin/bash
+    # entrypoint: ./main inmemory            # execute the compiled main program (golang); use inmemory database
+    # entrypoint: ./main sql                 # execute the compiled main program (golang); use sql databases; remove docker image to start w/ blank slate
+    entrypoint: /bin/bash
     tty: true
     stdin_open: true
     restart: on-failure                 # restarts container when it goes down
@@ -52,7 +53,7 @@ services:
     depends_on:
       - rabbitmq-server
       - auctions-postgres-server
-  # #### CAM SERVICE
+  #### CAM SERVICE
   cam-mongo-server:
     image: cam-mongo-server:latest
     container_name: cam-mongo-server
@@ -67,13 +68,13 @@ services:
     ports:
       - "28017:28017"
       - "27017:27017"
-    restart: always
+    # restart: always
   cam-service:
     image: cam-service:latest
     container_name: cam-service
     hostname: cam-service
-    entrypoint: python3 api_main.py         # execute main program (python)
-    # entrypoint: /bin/bash
+    # entrypoint: python3 api_main.py         # execute main program (python)
+    entrypoint: /bin/bash
     tty: true
     stdin_open: true
     restart: on-failure                 # restarts container when it goes down
@@ -87,7 +88,7 @@ services:
     depends_on:
       - rabbitmq-server
       - cam-mongo-server
-  # #### USER-SERVICE
+  #### USER-SERVICE
   user-service:
     build:
       context: https://github.com/MPCS51205-TMACs/user-service.git
@@ -107,9 +108,9 @@ services:
     depends_on:
       - postgres-user
       - rabbitmq-server
-      # - auctions-service
     networks:
       - my-application-network
+    # restart: on-failure                 # restarts container when it goes down
   postgres-user:
     image: postgres
     container_name: postgres-user
@@ -126,7 +127,7 @@ services:
     image: postgres
     container_name: postgres-watchlist
     ports:
-      - 5434:5432 # make sure unique!
+      - 5434:5432 # make sure LHS port unique!
     environment:
       POSTGRES_USER: watchlist-service
       POSTGRES_PASSWORD: watchlist-service
@@ -139,7 +140,7 @@ services:
     image: maven/builder:watchlist-service
     container_name: watchlist-service
     ports:
-      - "8082:8080" # make sure unique
+      - "8082:8080" # make sure LHS port unique
     volumes:
       - "${WATCHLIST_IMG_DOCKERFILE}/src:/build/src"
       - "${WATCHLIST_IMG_DOCKERFILE}/target:/build/target:cached"
@@ -193,11 +194,11 @@ services:
     command: "mvn spring-boot:run"
     networks:
       - my-application-network
-    depends_on:
-      - auctions-service # MAKE DEPEND ON EVERY MICROSERVICE
-      - cam-service
-      - user-service
-      - watchlist
+    # depends_on:
+    #   - auctions-service # MAKE DEPEND ON EVERY MICROSERVICE
+    #   - cam-service
+    #   - user-service
+    #   - watchlist
 
 networks:
   my-application-network:
