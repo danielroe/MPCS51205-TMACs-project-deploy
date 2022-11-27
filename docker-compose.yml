@@ -181,24 +181,40 @@ services:
     networks:
       - my-application-network
   #### GATEWAY
-  gateway:
-    # build:
-    #   context: https://github.com/MPCS51205-TMACs/gateway.git
-    image: maven/builder:gateway
-    container_name: gateway
-    ports:
-      - "8080:8080" # make sure unique
+  # gateway:
+  #   build:
+  #     context: .
+  #   image: maven/builder:gateway
+  #   container_name: gateway
+  #   ports:
+  #     - "8080:8080" # make sure unique
+  #   volumes:
+  #     - "${GATEWAY_IMG_DOCKERFILE}/src:/build/src"
+  #     - "${GATEWAY_IMG_DOCKERFILE}/target:/build/target:cached"
+  #   command: "mvn spring-boot:run"
+  #   networks:
+  #     - my-application-network
+  #   depends_on:
+  #     - auctions-service # MAKE DEPEND ON EVERY MICROSERVICE
+  #     - cam-service
+  #     - user-service
+  #     - watchlist
+  #### GATEWAY PYTHON
+  gateway-python:
+    image: gateway-python:latest
+    container_name: gateway-python
+    hostname: gateway-python
+    # entrypoint: python3 gateway_api_main.py         # execute main program (python)
+    entrypoint: /bin/bash
+    tty: true
+    stdin_open: true
+    restart: on-failure                 # restarts container when it goes down
     volumes:
-      - "${GATEWAY_IMG_DOCKERFILE}/src:/build/src"
-      - "${GATEWAY_IMG_DOCKERFILE}/target:/build/target:cached"
-    command: "mvn spring-boot:run"
+      - ${GATEWAY_IMG_DOCKERFILE}:/gateway-python-debug # for debugging, mount src folder as separate folder
     networks:
       - my-application-network
-    # depends_on:
-    #   - auctions-service # MAKE DEPEND ON EVERY MICROSERVICE
-    #   - cam-service
-    #   - user-service
-    #   - watchlist
+    ports:
+      - "8080:8080"
 
 networks:
   my-application-network:
