@@ -180,6 +180,36 @@ services:
       POSTGRES_DB: item
     networks:
       - my-application-network
+  #### NOTIFICATION-SERVICE
+  notification-service:
+    build:
+      context: .
+    image: maven/builder:notification-service
+    container_name: notification-service
+    hostname: notification-service
+    # restart: on-failure
+    ports:
+      - "8083:8080" # make sure LHS port unique
+    volumes:
+      - "${NOTIFICATION_IMG_DOCKERFILE}/src:/build/src"
+      - "${NOTIFICATION_IMG_DOCKERFILE}/target:/build/target:cached"
+    command: "mvn spring-boot:run"
+    depends_on:
+      - postgres-notification
+      - rabbitmq-server
+    networks:
+      - my-application-network
+  postgres-notification:
+    image: postgres
+    container_name: postgres-notification
+    ports:
+      - "5436:5432" # make sure LHS port unqiue
+    environment:
+      POSTGRES_USER: notification-service
+      POSTGRES_PASSWORD: notification-service
+      POSTGRES_DB: notification
+    networks:
+      - my-application-network
   #### GATEWAY
   # gateway:
   #   build:
