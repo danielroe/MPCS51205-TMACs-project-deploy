@@ -159,7 +159,7 @@ services:
     hostname: item-service
     restart: on-failure
     ports:
-      - "8088:8080" # make sure LHS port unique
+      - "8088:8088" # make sure LHS port unique
     volumes:
       - "${ITEM_IMG_DOCKERFILE}/src:/build/src"
       - "${ITEM_IMG_DOCKERFILE}/target:/build/target:cached"
