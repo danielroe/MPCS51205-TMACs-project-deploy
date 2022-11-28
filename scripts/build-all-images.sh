@@ -78,8 +78,8 @@ echo
 
 # export CAM_IMG_DOCKERFILE="$PROJECT_DIR_PATH/$CAM_SERVICE_DIR_NAME/closed-auction-metrics/"
 # export CAM_IMG_NAME="cam-service"
-echo CAM_IMG_DOCKERFILE=$CAM_IMG_DOCKERFILE
-echo CAM_IMG_NAME=$CAM_IMG_NAME
+# echo CAM_IMG_DOCKERFILE=$CAM_IMG_DOCKERFILE
+# echo CAM_IMG_NAME=$CAM_IMG_NAME
 echo "building ClosedAuctionMetricsService ($CAM_IMG_NAME) image from dockerfile..."
 docker build -t "$CAM_IMG_NAME:latest" $CAM_IMG_DOCKERFILE
 echo
