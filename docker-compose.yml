@@ -210,6 +210,43 @@ services:
       POSTGRES_DB: notification
     networks:
       - my-application-network
+  ### SHOPPING-CART
+  cart-mongo-server:
+    # build:
+    #   context: "${SHOPPING_CART_IMG_DOCKERFILE}/shopping-cart-service/mongodb"
+    image: cart-mongo-server:latest
+    container_name: cart-mongo-server
+    hostname: cart-mongo-server
+    environment:                        # sets environment variables
+      - MONGODB_PASS=password
+    # volumes:
+      # - mongodata:/data/db # allows persistence; see https://betterprogramming.pub/persistent-databases-using-dockers-volumes-and-mongodb-9ac284c25b39
+    networks:
+      - my-application-network
+    ports:
+      - "28018:28017" # make sure LHS port unique
+      - "27018:27017" # make sure LHS port unique
+    restart: always
+  shopping-cart-service:
+    # build:
+    #   context: "${SHOPPING_CART_IMG_DOCKERFILE}/shopping-cart-service//shopping-cart-service"
+    image: shopping-cart-service:latest
+    container_name: shopping-cart-service
+    hostname: shopping-cart-service
+    # entrypoint: python3 api_main.py         # execute the compiled main program (python)
+    entrypoint: /bin/bash
+    tty: true
+    stdin_open: true
+    restart: on-failure
+    volumes:
+      - ${SHOPPING_CART_IMG_DOCKERFILE}:/shopping-cart-service-debug # for debugging, mount src folder as separate folder
+    networks:
+      - my-application-network
+    ports:
+      - "10001:10001"
+    depends_on:
+      - rabbitmq-server
+      - cart-mongo-server
   #### GATEWAY
   gateway:
     build:

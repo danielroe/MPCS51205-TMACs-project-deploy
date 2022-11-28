@@ -102,6 +102,10 @@ docker build -t $ITEM_IMG_NAME $ITEM_IMG_DOCKERFILE
 echo "building notification-service image ($NOTIFICATION_IMG_NAME) from dockerfile..."
 docker build -t $NOTIFICATION_IMG_NAME $NOTIFICATION_IMG_DOCKERFILE
 
+# shopping-cart-service
+echo "building shopping-cart-service image ($SHOPPING_CART_IMG_NAME) from dockerfile..."
+docker build -t $SHOPPING_CART_IMG_NAME $SHOPPING_CART_IMG_DOCKERFILE
+
 # gateway
 echo "building gateway image ($GATEWAY_IMG_NAME) from dockerfile..."
 docker build -t $GATEWAY_IMG_NAME $GATEWAY_IMG_DOCKERFILE
