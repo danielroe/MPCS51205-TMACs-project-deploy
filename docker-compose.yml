@@ -41,14 +41,16 @@ services:
     # entrypoint: ./main inmemory            # execute the compiled main program (golang); use inmemory database
     # entrypoint: ./main sql                 # execute the compiled main program (golang); use sql databases; remove docker image to start w/ blank slate
     # entrypoint: /bin/bash
-    entrypoint: /run_after_java_builds.sh
+    # entrypoint: /run_after_java_builds.sh
+    entrypoint: /run_after_java_builds_debug.sh
     tty: true
     stdin_open: true
     restart: on-failure                 # restarts container when it goes down
     volumes:
       - ${AUCTIONS_SERVICE_DIR_PATH}/auctions-service:/go/src/auctions-service-debug # for debugging, mount src folder as separate folder
       # - "./run_after_java_builds.sh:/go/bin/auctions-service/run_after_java_builds.sh"
-      - "${AUCTIONS_SERVICE_DIR_PATH}/auctions-service/run_after_java_builds.sh:/go/bin/auctions-service/debug_run_after_java_builds.sh" # for debugging
+      - "${AUCTIONS_SERVICE_DIR_PATH}/auctions-service/run_after_java_builds.sh:/go/bin/auctions-service/run_after_java_builds.sh" # for debugging
+      - "${AUCTIONS_SERVICE_DIR_PATH}/auctions-service/run_after_java_builds_debug.sh:/go/bin/auctions-service/run_after_java_builds_debug.sh" # for debugging
     networks:
       - my-application-network
     ports:
@@ -77,7 +79,8 @@ services:
     container_name: cam-service
     hostname: cam-service
     # entrypoint: python3 api_main.py         # execute main program (python)
-    entrypoint: /bin/bash
+    entrypoint: python3 /closed-auction-metrics-debug/src/api_main.py         # for debugging
+    # entrypoint: /bin/bash
     tty: true
     stdin_open: true
     restart: on-failure                 # restarts container when it goes down
@@ -242,7 +245,8 @@ services:
     container_name: shopping-cart-service
     hostname: shopping-cart-service
     # entrypoint: python3 api_main.py         # execute the compiled main program (python)
-    entrypoint: /bin/bash
+    entrypoint: python3 /shopping-cart-service-debug/src/api_main.py         # for debugging
+    # entrypoint: /bin/bash
     tty: true
     stdin_open: true
     restart: on-failure
