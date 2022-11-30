@@ -40,12 +40,15 @@ services:
     hostname: auctions-service
     # entrypoint: ./main inmemory            # execute the compiled main program (golang); use inmemory database
     # entrypoint: ./main sql                 # execute the compiled main program (golang); use sql databases; remove docker image to start w/ blank slate
-    entrypoint: /bin/bash
+    # entrypoint: /bin/bash
+    entrypoint: /run_after_java_builds.sh
     tty: true
     stdin_open: true
     restart: on-failure                 # restarts container when it goes down
     volumes:
       - ${AUCTIONS_SERVICE_DIR_PATH}/auctions-service:/go/src/auctions-service-debug # for debugging, mount src folder as separate folder
+      # - "./run_after_java_builds.sh:/go/bin/auctions-service/run_after_java_builds.sh"
+      - "${AUCTIONS_SERVICE_DIR_PATH}/auctions-service/run_after_java_builds.sh:/go/bin/auctions-service/debug_run_after_java_builds.sh" # for debugging
     networks:
       - my-application-network
     ports:
@@ -58,7 +61,7 @@ services:
     image: cam-mongo-server:latest
     container_name: cam-mongo-server
     hostname: cam-mongo-server
-    environment:                        # sets environment variables
+    environment:
       - MONGODB_PASS=password
     volumes:
       # - ${CLOSED_AUCTION_METRICS_SERVICE_DIR_PATH}/closed-auction-metrics/src/db/init:/docker-entrypoint-initdb.d # runs if !exist data volume
@@ -83,8 +86,7 @@ services:
     networks:
       - my-application-network
     ports:
-      - "51224:51224"                   # allows localhost and other containers to reach this container's [REST/HTTP API]
-                                        # other containers can ping this container [e.g. REST/HTTP API] with notations HOST:PORT=closed-auctions-service:51224
+      - "51224:51224"
     depends_on:
       - rabbitmq-server
       - cam-mongo-server
@@ -104,6 +106,7 @@ services:
     volumes:
       - "${USER_SERVICE_IMG_DOCKERFILE}/src:/build/src"
       - "${USER_SERVICE_IMG_DOCKERFILE}/target:/build/target:cached"
+      # - "./ishealthy-user.sh:/build/ishealthy-user.sh"
     command: "mvn spring-boot:run"
     depends_on:
       - postgres-user
@@ -111,6 +114,11 @@ services:
     networks:
       - my-application-network
     restart: on-failure                 # restarts container when it goes down
+    # healthcheck:
+    #   test: ["CMD", "/build/ishealthy-user.sh"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 20
   postgres-user:
     image: postgres
     container_name: postgres-user
@@ -290,16 +298,3 @@ networks:
 volumes:
   pgdata: # clear persisted data with 'docker volume rm project-deploy_pgdata'
   mongodata: # clear persisted data with 'docker volume rm project-deploy_mongodata'
-
-  # MATT'S RABBIT
-    # rabbitmq: 
-    #   image: rabbitmq:3-management
-    #   container_name: rabbitmq-server
-    #   restart: always
-    #   ports:
-    #     - "15672:15672"
-    #     - "5672:5672"
-    #   networks:
-    #     - my-application-network
-
-    
