@@ -69,8 +69,8 @@ docker build -t $USER_SERVICE_IMG_NAME $USER_SERVICE_IMG_DOCKERFILE --no-cache
 echo "building watchlist-service image ($WATCHLIST_IMG_NAME) from dockerfile..."
 docker build -t $WATCHLIST_IMG_NAME $WATCHLIST_IMG_DOCKERFILE --no-cache
 
-# user-service
-echo "building user-service image ($ITEM_IMG_NAME) from dockerfile..."
+# item-service
+echo "building item-service image ($ITEM_IMG_NAME) from dockerfile..."
 docker build -t $ITEM_IMG_NAME $ITEM_IMG_DOCKERFILE --no-cache
 
 # notification-service
