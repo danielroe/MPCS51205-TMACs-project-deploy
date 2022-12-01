@@ -41,8 +41,8 @@ services:
     # entrypoint: ./main inmemory            # execute the compiled main program (golang); use inmemory database
     # entrypoint: ./main sql                 # execute the compiled main program (golang); use sql databases; remove docker image to start w/ blank slate
     # entrypoint: /bin/bash
-    # entrypoint: /run_after_java_builds.sh
-    entrypoint: /run_after_java_builds_debug.sh
+    entrypoint: /run_after_java_builds.sh
+    # entrypoint: /run_after_java_builds_debug.sh
     tty: true
     stdin_open: true
     restart: on-failure                 # restarts container when it goes down
