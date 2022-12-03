@@ -122,7 +122,7 @@ echo
 export SHOPPING_CART_GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/shopping-cart-service.git"
 export SHOPPING_CART_DIR_NAME="shopping-cart-service"
 export SHOPPING_CART_IMG_NAME="shopping-cart-service:latest"
-export SHOPPING_CART_IMG_DOCKERFILE="$PROJECT_DIR_PATH/shopping-cart-service/shopping-cart-service/"
+export SHOPPING_CART_IMG_DOCKERFILE="$PROJECT_DIR_PATH/shopping-cart-service/"
 echo shopping-cart
 echo 
 echo SHOPPING_CART_GITHUB_REPO_URL=$SHOPPING_CART_GITHUB_REPO_URL

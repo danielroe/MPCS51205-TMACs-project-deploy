@@ -58,6 +58,7 @@ services:
     depends_on:
       - rabbitmq-server
       - auctions-postgres-server
+      - user-service
   #### CAM SERVICE
   cam-mongo-server:
     image: cam-mongo-server:latest
@@ -223,15 +224,15 @@ services:
       - my-application-network
   ### SHOPPING-CART
   cart-mongo-server:
-    # build:
-    #   context: "${SHOPPING_CART_IMG_DOCKERFILE}/shopping-cart-service/mongodb"
+    build:
+      context: "${SHOPPING_CART_IMG_DOCKERFILE}mongodb"
     image: cart-mongo-server:latest
     container_name: cart-mongo-server
     hostname: cart-mongo-server
     environment:                        # sets environment variables
       - MONGODB_PASS=password
-    # volumes:
-      # - mongodata:/data/db # allows persistence; see https://betterprogramming.pub/persistent-databases-using-dockers-volumes-and-mongodb-9ac284c25b39
+    volumes:
+       - mongodata:/data/db # allows persistence; see https://betterprogramming.pub/persistent-databases-using-dockers-volumes-and-mongodb-9ac284c25b39
     networks:
       - my-application-network
     ports:
@@ -239,14 +240,14 @@ services:
       - "27018:27017" # make sure LHS port unique
     restart: always
   shopping-cart-service:
-    # build:
-    #   context: "${SHOPPING_CART_IMG_DOCKERFILE}/shopping-cart-service//shopping-cart-service"
+    build:
+      context: "${SHOPPING_CART_IMG_DOCKERFILE}/shopping-cart-service/shopping-cart-service"
     image: shopping-cart-service:latest
     container_name: shopping-cart-service
     hostname: shopping-cart-service
-    # entrypoint: python3 api_main.py         # execute the compiled main program (python)
-    entrypoint: python3 /shopping-cart-service-debug/src/api_main.py         # for debugging
-    # entrypoint: /bin/bash
+    entrypoint: python3 api_main.py         # execute the compiled main program (python)
+    #entrypoint: python3 /shopping-cart-service-debug/src/api_main.py         # for debugging
+    #entrypoint: /bin/bash
     tty: true
     stdin_open: true
     restart: on-failure
