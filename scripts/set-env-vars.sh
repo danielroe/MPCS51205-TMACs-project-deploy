@@ -51,7 +51,7 @@ export CAM_SERVICE_DIR_NAME="closed-auction-metrics"
 export CAM_SERVICE_DIR_PATH=$PROJECT_DIR_PATH/$CAM_SERVICE_DIR_NAME
 export CAM_IMG_DOCKERFILE="$PROJECT_DIR_PATH/$CAM_SERVICE_DIR_NAME/closed-auction-metrics/"
 export CAM_IMG_NAME="cam-service"
-export CAM_MONGO_IMG_DOCKERFILE="$PROJECT_DIR_PATH/$CAM_SERVICE_DIR_NAME/mongodb/"
+export CAM_MONGO_IMG_DOCKERFILE="$PROJECT_DIR_PATH/mongodb/"
 export CAM_MONGO_IMG_NAME="cam-mongo-server"
 
 echo $CAM_SERVICE_DIR_NAME
@@ -122,7 +122,7 @@ echo
 export SHOPPING_CART_GITHUB_REPO_URL="https://github.com/MPCS51205-TMACs/shopping-cart-service.git"
 export SHOPPING_CART_DIR_NAME="shopping-cart-service"
 export SHOPPING_CART_IMG_NAME="shopping-cart-service:latest"
-export SHOPPING_CART_IMG_DOCKERFILE="$PROJECT_DIR_PATH/shopping-cart-service/"
+export SHOPPING_CART_IMG_DOCKERFILE="$PROJECT_DIR_PATH/shopping-cart-service/shopping-cart-service/"
 echo shopping-cart
 echo 
 echo SHOPPING_CART_GITHUB_REPO_URL=$SHOPPING_CART_GITHUB_REPO_URL
