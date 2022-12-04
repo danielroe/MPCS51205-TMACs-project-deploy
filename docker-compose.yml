@@ -273,11 +273,24 @@ services:
     command: "mvn spring-boot:run"
     networks:
       - my-application-network
-    # depends_on:
+    depends_on:
+      - postgres-gateway
     #   - auctions-service # MAKE DEPEND ON EVERY MICROSERVICE
     #   - cam-service
     #   - user-service
     #   - watchlist
+    
+  postgres-gateway:
+    image: postgres
+    container_name: postgres-gateway
+    ports:
+      - "5437:5432"
+    environment:
+      POSTGRES_USER: gateway
+      POSTGRES_PASSWORD: gateway
+      POSTGRES_DB: revoked_tokens
+    networks: # allows containers to recognize the hostnames of other containers
+      - my-application-network
   #### GATEWAY PYTHON
   # gateway-python:
   #   image: gateway-python:latest
