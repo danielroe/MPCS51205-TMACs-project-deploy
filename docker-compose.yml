@@ -26,7 +26,7 @@ services:
       - POSTGRES_PASSWORD=mysecret
     volumes:
       - ${AUCTIONS_SERVICE_DIR_PATH}/auctions-service/db/create_db_and_empty_tables.sql:/docker-entrypoint-initdb.d/create_db_and_empty_tables.sql # runs if !exist data volume
-      - ${AUCTIONS_SERVICE_DIR_PATH}/auctions-service/db/fill_tables_w_data.sql:/docker-entrypoint-initdb.d/fill_tables_w_data.sql # runs if !exist data volume
+      # - ${AUCTIONS_SERVICE_DIR_PATH}/auctions-service/db/fill_tables_w_data.sql:/docker-entrypoint-initdb.d/fill_tables_w_data.sql # runs if !exist data volume
       - pgdata:/var/lib/postgresql/data # allows persistence; see https://github.com/docker-library/postgres/issues/116
     networks:
       - my-application-network
@@ -90,7 +90,7 @@ services:
     networks:
       - my-application-network
     ports:
-      - "51224:51224"
+      - "10002:51224"
     depends_on:
       - rabbitmq-server
       - cam-mongo-server
@@ -225,14 +225,14 @@ services:
   ### SHOPPING-CART
   cart-mongo-server:
     build:
-      context: "${SHOPPING_CART_IMG_DOCKERFILE}mongodb"
+      context: "${PROJECT_DIR_PATH}/shopping-cart-service/mongodb"
     image: cart-mongo-server:latest
     container_name: cart-mongo-server
     hostname: cart-mongo-server
     environment:                        # sets environment variables
       - MONGODB_PASS=password
-    volumes:
-       - mongodata:/data/db # allows persistence; see https://betterprogramming.pub/persistent-databases-using-dockers-volumes-and-mongodb-9ac284c25b39
+    # volumes:
+    #    - mongodata:/data/db # allows persistence; see https://betterprogramming.pub/persistent-databases-using-dockers-volumes-and-mongodb-9ac284c25b39
     networks:
       - my-application-network
     ports:
@@ -241,13 +241,13 @@ services:
     restart: always
   shopping-cart-service:
     build:
-      context: "${SHOPPING_CART_IMG_DOCKERFILE}/shopping-cart-service/shopping-cart-service"
+      context: "${SHOPPING_CART_IMG_DOCKERFILE}"
     image: shopping-cart-service:latest
     container_name: shopping-cart-service
     hostname: shopping-cart-service
-    entrypoint: python3 api_main.py         # execute the compiled main program (python)
-    #entrypoint: python3 /shopping-cart-service-debug/src/api_main.py         # for debugging
-    #entrypoint: /bin/bash
+    # entrypoint: python3 api_main.py         # execute the compiled main program (python)
+    entrypoint: python3 /shopping-cart-service-debug/src/api_main.py         # for debugging
+    # entrypoint: /bin/bash
     tty: true
     stdin_open: true
     restart: on-failure
