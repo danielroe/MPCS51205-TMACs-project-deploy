@@ -275,6 +275,7 @@ services:
       - my-application-network
     depends_on:
       - postgres-gateway
+      - rabbitmq-server
     #   - auctions-service # MAKE DEPEND ON EVERY MICROSERVICE
     #   - cam-service
     #   - user-service
