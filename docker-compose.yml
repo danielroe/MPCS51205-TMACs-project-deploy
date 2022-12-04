@@ -61,6 +61,8 @@ services:
       - user-service
   #### CAM SERVICE
   cam-mongo-server:
+    build:
+      context: ${CAM_SERVICE_DIR_PATH}/mongodb
     image: cam-mongo-server:latest
     container_name: cam-mongo-server
     hostname: cam-mongo-server
@@ -252,7 +254,7 @@ services:
     stdin_open: true
     restart: on-failure
     volumes:
-      - ${SHOPPING_CART_IMG_DOCKERFILE}/shopping-cart-service:/shopping-cart-service-debug # for debugging, mount src folder as separate folder
+      - ${SHOPPING_CART_IMG_DOCKERFILE}:/shopping-cart-service-debug # for debugging, mount src folder as separate folder
     networks:
       - my-application-network
     ports:
