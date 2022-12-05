@@ -41,11 +41,11 @@ echo
 # we create each image from a docker file, using the docker command:
 # 'docker build -t IMAGETAGNAME:VERSION PATHTODOCKERFILE'
 
-# auctions-service
+# postgres (for auctions-service)
 echo "building Postgres image ($AUCTIONS_POSTGRES_IMG_NAME) from dockerfile..."
 docker build -t "$AUCTIONS_POSTGRES_IMG_NAME:latest" $AUCTIONS_POSTGRES_IMG_DOCKERFILE --no-cache
 
-# auctions-service
+# rabbitmq (using dockerfile from auctions-service)
 echo "building RabbitMQ image ($RABBITMQ_IMG_NAME) from dockerfile..."
 docker build -t "$RABBITMQ_IMG_NAME:latest" $RABBITMQ_IMG_DOCKERFILE --no-cache
 

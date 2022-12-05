@@ -78,7 +78,7 @@ Among the 7 microservices, 3 stand out as major services: `user-service`, `item-
 Both services publish a handful of messages to RabbitMQ `fanout` style. examples include (there are a handful more):
 * `item.counterfeit`
 * `item.create`
-    * An example of reactivity: watchlist-service listens for new items to see if that new item will match the watchlist of any user in the system and if so will invoke the `notification-service` to notify that user.
+    * An example of reactivity: `watchlist-service` listens for new items to see if that new item will match the watchlist of any user in the system and if so will invoke the `notification-service` to notify that user.
 * `user.create`
     * An example of reactivity: `notification-service` writes down the email of that user. That allows the `notification-service` to not have to talk to the `user-service` to get the user's contact information every time it wanted to alert that user. Consider how many network calls this would be during an active auction where many notifications need to be sent out. Also, it is not critical if the `notification-service` has slightly out-dated information about the user's contact details.
 * `user.activation` (e.g. suspend or unsuspend user)
@@ -124,3 +124,32 @@ auctions-service publishes new bids to an exchange as fanout rather than directl
 # testing
 
 some microservices have unit tests for e.g. domain layer or database layer type code. Few tests exist for integration. Integration was done through manual inspection of correctness with sequences of requests defined in a large Postman workspace we created. It has workflows of typical system requests in the backend.
+
+See the `documentation` git repository for getting postman related documentation about each services' endpoints.
+
+# persistence
+
+Important note!
+
+* `auctions-service`, `shopping-cart-service`, and `cam-service` will persist their data to the localmachine via the use of docker-volumes. I.e., data does not get destroyed upon deletion/creation of containers (data persists between docker-compose up -d / down calls.)
+* the other services only persist data for the life time of the container. these containers will have data persisted between docker-compose start / stop calls, but data gets destroyed when docker-compose down is called. These inconsistencies in data storage is annoying but we did not find time to correct this.
+
+To start all databases from scratch before docker-compose up -d call, delete the docker volumes on the local machine by running `. scripts/clear-dbs.sh`. I.e. delete the docker volumes. When docker-compose up -d is called, these volumes will be created from scratch, and all services will have empty databases.
+
+# developer notes
+
+* stubbed behavior
+    * `shopping-cart-service` grabs payment details from the `user-service` in checkout operations. We added user `addresses` to the user schema so that shopping cart can grab that too when it grabs payment information, but we did not have time to get shopping-cart to do anything with that data (stubbed).
+    * `notification-service` required a lot of debugging since it is listening to many messages. We did not have the time to incorporate a call where `notification-service` e.g. gets all the users who've bookmarked an item from the `item-service` in order to figure out all the individuals to email. So, we have stubbed this behavior and instead kept track of the "system-wide" notifications. That is, in the UI, every user sees all notifications that in the system.
+
+### `shopping-cart`, `auctions-service`, `item-service`
+
+Near the end of the project, we discovered slight tension between these 3 services with regards to item deletion and user deletion.
+
+__item deletion__: handled like so:
+* if deleting an item, `item-service` requests `auctions-service` to cancel the auction associated with the item. Cancelling an auction fails if the auction is active and has a bid or is over/already canceled/finalized. This technically means there is no way to delete an item from the system whose auction is over--since any auction that is over cannot be canceled, and deletion of an item is tied to auction cancellation
+
+__user deletion__: handled like so:
+* deleting a user deactivates/activates his bids for any live auctions in the `auction-service`
+* deleting a user who has listed items for sale only succeeds if we can delete all his items (possibly changed by time of writing 12/5/2022 3:24 PM CDT?). Since we can only delete an item if we can cancel its auction, if the user has any items for which the auction is over, the user can't be deleted. We may have refactored user deletion by time of writing so that: for each item whose auction has not yet started, we ask auction to cancel that auction, and we proceed to delete those items. For all items he has whose auctions are live or are over (the item may or may not have been bought), then we do not request the associated auction be canceled (it need not be canceled anyway as discussed next).
+* in the end, deleting all items associated with a user when we delete them is not a major design flaw. If we delete his items, and they no longer exist, but those items' associated auctions live on, the checkout of those items at auction end will fail. All `auction.end` events will get processed by `shopping-cart-service`, and `shopping-cart-service` will fail to proceed with checkout when it consults with `items-service` and discovers the items do not exist. Thus these issues are not major design flaws but rather contribute to lesser transparency about item/auction state at any time.
