@@ -83,6 +83,15 @@ Both services publish a handful of messages to RabbitMQ `fanout` style. examples
     * An example of reactivity: `notification-service` writes down the email of that user. That allows the `notification-service` to not have to talk to the `user-service` to get the user's contact information every time it wanted to alert that user. Consider how many network calls this would be during an active auction where many notifications need to be sent out. Also, it is not critical if the `notification-service` has slightly out-dated information about the user's contact details.
 * `user.activation` (e.g. suspend or unsuspend user)
     * An example of reactivity: auctions-service listens to `user.activation` and `user.delete`, and it renders that user's bids for active auctions disabled--ensuring they cannot win any auctions henceforth. An event like `user.activation` indicating a user getting re-activated will re-activate his bids in any active auctions if there are any. `notification-service` may remember to not notify a user if they have suspended their account (so they don't get emails).
+    
+    
+`item-service` implements a large amount of endpoints in order to meet the demands of the overall system to manage and evaluate the state of each item. The `Item` class itself contains a rich amount of information to satisfy different requirements; such as start and end time, price, the seller ID, different states (counterfeit, inappropriate, bought, buyNow), and whether or not it has categories or bookmarks applied. `item-service` also supports different variations on `Item` for a better integration with the `auctions-service` and updating an item with optional fields.
+    
+`item-service` supports two repositories and corresponding controllers for items and categories with the reason being both require CRUD operations, a persistance of data, and exist in a Many-To-Many relationship (i.e., one item can have many categories and one category can be applied to many items). In conjunction, bookmarks and items exist in a Many-To-One and One-To-Many relationship (i.e., one item can have many bookmarks but only one bookmark can be applied to one item), so bookmarks did not require a separate database but rather a table within the items repository.
+    
+As mentioned above, `item-service` publishes and subscribes to different queues/exchanges to inform and be informed of changes in the system. Items will listen for a `user.delete` message in order to delete all items from the database that the user was selling and will publish messages for events such as create, update, delete, and marked inappropriate or counterfeit.
+    
+In conclusion for `item-service`, it offers a large selection of endpoints in order to perform multiple different tasks required by the auction site, but each is protected by JWT authorization/authentication so only valid users and admins may call them through the front end successfully.
 
 ## `auctions-service`
 
