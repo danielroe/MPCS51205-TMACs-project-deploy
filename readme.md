@@ -103,14 +103,14 @@ The auctions-service publishes a handful of messages to RabbitMQ. They are a mix
     * example of reactivity: `notification-service` sees the item it needs to send out an alert for. It asks the item-service for all the user_id's who have bookmarked an item. The `notification-service` knows all their emails, and it sends an alert to all of them.
 * `auction.end-soon`
 
-![alt text](misc/auction-interface.jpg "auctions-service")
+![alt text](misc/auction-interface.jpg)
 
 > illustration of `auction-service`'s interface. solid lines represent synchronous communication through HTTP requests (to an exposed RESTful API). Red dotted lines indicate asynchronous communication. Not mentioned so far: `shopping-cart-service`'s checkout() operation includes, for each item, a synchronous call to cancel the auction associated with that item (N calls for N items). ShoppingCart already knows the start time of each auction, so it knows before making the calls to the auctions-service that the cancellations can be done (we opted for only being able to "buy now" items if the current time is prior to auction start time). Thus if cancellations fail for any reason, the shopping-cart can still proceed with the transaction. Upon failure, the auction concludes, and if there is a winner, he will not be allowed to buy the item because shopping-cart will see the item has already been bought. Thus, worst case scenario the failure of these calls results in a handful of people wasting their time bidding in an action when the item has already been sold.
 
-auctions-service publishes new bids to an exchange (fanout) rather than directly to itself is to support a possible future refactor to support a `real-time-views` service and create a performant system. The idea: the auctions-service will have heavy traffic at the end of an auction to create new bids and to get all the existing bids (queries). By creating a dedicated service for queries, we can approximately half the traffic to the `auction-service` so that it can focus on bid processing, giving a more real-time experience.
+auctions-service publishes new bids to an exchange as fanout rather than directly to a queue for itself to support a possible future refactor aimed at providing a `real-time-views` service. This helps create an elastic system capable of high throughput. The idea: the auctions-service will have heavy traffic at the end of an auction to create and process new bids and respond to queries about all the existing bids. By creating a dedicated service for queries, we can approximately half the traffic to the `auction-service` so that it can focus on bid processing, giving a more real-time experience.
 
-![alt text](misc/auction-refactor.jpg "auctions-refactor")
-> the `real-time-views` service consumes asynchronous messages about incoming bids and about the result of processing bids. It can maintain essentially a sorted table of bids that users can see, and the table can be updated to reflect the state of the bid (received and being processed, approved and official, etc). This allows bidders to react to bids with very low latency.
+![alt text](misc/auction-refactor.jpg)
+> the `real-time-views` service consumes asynchronous messages about incoming bids and about the result of processing bids. It can maintain essentially a sorted table of bids that users can see, and the table can be updated to reflect the state of the bid (received and being processed, approved and official, etc). This allows bidders to react to bids with lower latency because both calls are synchronous and dividing the traffic halves the total process time for a batch of `N` `POST` requests and `N` `GET` requests.
 
 # testing
 
