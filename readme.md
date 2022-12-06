@@ -1,6 +1,13 @@
 # team `TMACs`: Webay
 
-# installation (backend+gateway)
+# installation
+
+You will need:
+
+1. `git` to clone the projects locally
+2. `node.js` (`npm`) installed locally to run the UI. Unfortunately, we did not have enough time to correctly figure  the time to correctly dockerize the UI in a node-like container, so we developed the UI locally
+
+## backend
 
 `project-deploy` is a git repository that is sufficient for deploying the application. It contains scripts to clone the other repositories, build images based on those repositories, and orchestrate application startup (`docker-compose`).
 
@@ -25,15 +32,92 @@ The above steps should bring up the application.
 
 1. after a call to `docker-compose up -d`, check the health of the `gateway` container by doing `docker logs -ft gateway`. Wait until the maven files have finished downloading. If the logs end with a "tomcat/petty started on port 8080", then it is good. If you encounter a build failure, check the changed files in the gateway repository (do a `git status` within the gateway repository). We noticed that in-between docker-compose files, some times additional configuration files will spawn that cause the build to fail. Delete the files if they appear and restart gateway by: deleting all newly appeared files and running `docker restart gateway`.
 
-2. to see if the whole system is "up" look at the logs of the `auctions-service` container (`docker logs -ft auctions-service`). This container continuously tries to curl 3 other containers before executing its main function. So, you can watch these logs until the log activity comes to a slow.
+```
+2022-12-06T00:45:58.996565900Z [INFO] Attaching agents: []
+2022-12-06T00:45:59.840148200Z Error: A JNI error has occurred, please check your installation and try again
+2022-12-06T00:45:59.841420400Z Exception in thread "main" java.lang.UnsupportedClassVersionError: com/example/gateway/GatewayApplication has been compiled by a more recent version of the Java Runtime (class file version 61.0), this version of the Java Runtime only recognizes class file versions up to 52.0
+2022-12-06T00:45:59.841553500Z  at java.lang.ClassLoader.defineClass1(Native Method)
+2022-12-06T00:45:59.841635700Z  at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
+2022-12-06T00:45:59.841681400Z  at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
+2022-12-06T00:45:59.841736800Z  at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
+2022-12-06T00:45:59.841781400Z  at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
+2022-12-06T00:45:59.841836000Z  at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
+2022-12-06T00:45:59.841874300Z  at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
+2022-12-06T00:45:59.841899500Z  at java.security.AccessController.doPrivileged(Native Method)
+2022-12-06T00:45:59.841979100Z  at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
+2022-12-06T00:45:59.842008100Z  at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+2022-12-06T00:45:59.842036700Z  at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:349)
+2022-12-06T00:45:59.842106200Z  at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+2022-12-06T00:45:59.842175500Z  at sun.launcher.LauncherHelper.checkAndLoadMain(LauncherHelper.java:495)
+2022-12-06T00:45:59.871713400Z [INFO] ------------------------------------------------------------------------
+2022-12-06T00:45:59.873340200Z [INFO] BUILD FAILURE
+2022-12-06T00:45:59.878542100Z [INFO] ------------------------------------------------------------------------
+2022-12-06T00:45:59.879334800Z [INFO] Total time: 27.469 s
+2022-12-06T00:45:59.880539200Z [INFO] Finished at: 2022-12-06T00:45:59Z
+2022-12-06T00:45:59.880909300Z [INFO] ------------------------------------------------------------------------
+2022-12-06T00:45:59.884859300Z [ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:2.7.5:run (default-cli) on project gateway: Application finished with exit code: 1 -> [Help 1]
+2022-12-06T00:45:59.885463600Z [ERROR]
+2022-12-06T00:45:59.889274700Z [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+2022-12-06T00:45:59.893316300Z [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+2022-12-06T00:45:59.895136400Z [ERROR]
+2022-12-06T00:45:59.895375500Z [ERROR] For more information about the errors and possible solutions, please read the following articles:
+2022-12-06T00:45:59.895757100Z [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
+```
+
+2. to see if the whole system is "up" look at the logs of the `auctions-service` container (`docker logs -ft auctions-service`). This container continuously tries to curl 3 other containers before executing its main function. So, you can watch these logs until the log activity comes to a slow:
+
+
+```
+2022-12-06T00:27:38.217495400Z curl: (7) Failed to connect to user-service port 8080: Connection refused
+2022-12-06T00:27:38.218224000Z waiting for user-service to be up... sleeping for 1 second
+2022-12-06T00:27:40.224122600Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2022-12-06T00:27:40.224185500Z                                  Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2022-12-06T00:27:40.225337300Z curl: (7) Failed to connect to user-service port 8080: Connection refused
+2022-12-06T00:27:40.226067400Z waiting for user-service to be up... sleeping for 1 second
+2022-12-06T00:27:42.231521900Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2022-12-06T00:27:42.231618500Z                                  Dload  Upload   Total   Spent    Left  Speed
+100   106    0   106    0     0    282      0 --:--:-- --:--:-- --:--:--   281
+2022-12-06T00:27:42.608075700Z
+2022-12-06T00:27:42.608104000Z user-service UP!
+2022-12-06T00:27:42.608111500Z
+2022-12-06T00:27:42.613156300Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2022-12-06T00:27:42.613215100Z                                  Dload  Upload   Total   Spent    Left  Speed
+100   106    0   106    0     0    322      0 --:--:-- --:--:-- --:--:--   322
+2022-12-06T00:27:42.943560000Z
+2022-12-06T00:27:42.943588200Z item-service UP!
+2022-12-06T00:27:42.943595800Z
+2022-12-06T00:27:42.943598600Z
+2022-12-06T00:27:42.943600500Z java services done building...
+2022-12-06T00:27:42.943602500Z
+2022-12-06T00:27:42.949767900Z OUTBOUND ADAPTER = deployment [outbound msgs go to RabbitMQ / other contexts]...
+2022-12-06T00:27:42.950991600Z REPOSITORY TYPE = postgres SQL [data persisted to docker-volume on localhost]
+2022-12-06T00:27:42.951963600Z 2022/12/06 00:27:42 Auctions Service API v1.0 - [Mux Routers impl for HTTP/RESTful API; RabbitMQ for messaging]
+2022-12-06T00:27:42.955839400Z 2022/12/06 00:27:42 [AuctionService] loaded 0 new auctions into memory ([Pending/Active/Canceled/Finalized] 0/0/0/0 in memory; 0 total in repository;)
+2022-12-06T00:27:42.955880800Z 2022/12/06 00:27:42 [AuctionService] sending out life cycle alerts...
+2022-12-06T00:27:42.955888000Z 2022/12/06 00:27:42 [AuctionService] finalizing (archiving) any past auctions...
+2022-12-06T00:27:42.985083800Z 2022/12/06 00:27:42 [handleNewBids] [*] Waiting for RabbitMQ messages. To exit press CTRL+C
+2022-12-06T00:27:42.985514500Z 2022/12/06 00:27:42 [handleItemCounterfeit] [*] Waiting for RabbitMQ messages. To exit press CTRL+C
+2022-12-06T00:27:42.988800500Z 2022/12/06 00:27:42 [handleUserUpdate] [*] Waiting for RabbitMQ messages. To exit press CTRL+C
+2022-12-06T00:27:42.988850900Z 2022/12/06 00:27:42 [handleUserActivation] [*] Waiting for RabbitMQ messages. To exit press CTRL+C
+2022-12-06T00:27:42.988860500Z 2022/12/06 00:27:42 [handleUserDelete] [*] Waiting for RabbitMQ messages. To exit press CTRL+C
+2022-12-06T00:27:42.989035600Z 2022/12/06 00:27:42 [handleItemInappropriate] [*] Waiting for RabbitMQ messages. To exit press CTRL+C
+2022-12-06T00:27:48.952186200Z 2022/12/06 00:27:48 [AuctionService] finalizing (archiving) any past auctions...
+2022-12-06T00:27:52.952079800Z 2022/12/06 00:27:52 [AuctionService] sending out life cycle alerts...
+2022-12-06T00:27:52.952960800Z 2022/12/06 00:27:52 [AuctionService] loaded 0 new auctions into memory ([Pending/Active/Canceled/Finalized] 0/0/0/0 in memory; 0 total in repository;)
+2022-12-06T00:27:54.952215100Z 2022/12/06 00:27:54 [AuctionService] finalizing (archiving) any past auctions...
+2022-12-06T00:28:00.951529600Z 2022/12/06 00:28:00 [AuctionService] finalizing (archiving) any past auctions...
+2022-12-06T00:28:02.951593900Z 2022/12/06 00:28:02 [AuctionService] sending out life cycle alerts...
+```
 
 3. after the auctions-service logs look "fine", do a `docker ps -a` to see if any containers have exited or are restarting. If not, the whole backend is up.
+
 
 ### interface to backend
 
 The whole backend is now accessible by the gateway, which is exposed on localhost port 8080; that is, UI clients will send all requests to `http://localhost:8080/`, and the gateway will reach other containers as necessary.
 
-# installation (UI)
+## installation (UI)
 
 we did not have enough time to dockerize the UI. `npm` must be downloaded locally.
 
@@ -56,6 +140,7 @@ $ npm dev run
 The UI is accessed on https://localhost:3000/ likely.
 
 # Architecture (technical)
+![alt text](misc/context_map.JPG)
 
 client-server relationship between frontend and gateway docker container. microservice architecture of ~7 microservices, which each have an accompanying database container.
 
@@ -66,6 +151,12 @@ client-server relationship between frontend and gateway docker container. micros
 * `shopping-cart-service`: python/mongo (no frameworks).
 * `watchlist-service`: java/postgres (+spring/boot).
 * `notification-service`: java/postgres (+spring/boot).
+
+
+
+![alt text](misc/tech_stacks.JPG)
+
+All domain models and user stores have stayed the same since previous iterations. The exception is the domain model for the `auctions-service` context. `auctions-(capture)-service` was merged with `auctions-service` to create one domain model. The details of the model can be found in the readme in  the `auctions-service` repository.
 
 # Architecture (logical)
 
